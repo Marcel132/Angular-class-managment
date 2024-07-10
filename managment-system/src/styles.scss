@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+$colors: ();
+$font_size: (
+  desktop_tiny: 11px,
+  desktop_small: 15px,
+  desktop_normal: 20px,
+  desktop_big: 25px,
+
+  tablet_small: 14px,
+  tablet_normal: 18px,
+  tablet_big: 22px,
+
+  mobile_small: 13px,
+  mobile_normal: 16px,
+  mobile_big: 19px,
+);
+$alerts: (
+  success: #d4bc0a,
+  error: #ff0000,
+  warning: #ff570f
+);
+
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-weight: normal;
+}
+
+
+// * Mobile
+@media screen and (max-width: 425px) {
+  * {
+    font-size: map-get($font_size, mobile_normal);
+  }
+}
+
+// * Tablet
+@media screen and (max-width: 768px) {
+  * {
+    font-size: map-get($font_size, tablet_normal);
+  }
+}
+
+// * Desktop
+@media screen and (min-width: 768px) {
+  * {
+    font-size: map-get($font_size, desktop_normal);
+  }
+}
+

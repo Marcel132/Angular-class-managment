@@ -1,0 +1,52 @@
+<div class="wrapper">
+  <div *ngIf="changeForms; then loginForms else signupForms"></div>
+</div>
+
+
+<ng-template #loginForms>
+  <form class="forms" (ngSubmit)="onLoginSubmit()">
+    <h3>Zaloguj się</h3>
+    <input
+    type="email"
+    placeholder='Adres email'
+    id='email'
+    name='email'
+    class='forms-input'
+    [(ngModel)]="login_email"
+    >
+    <input
+    [type]="changePasswordType"
+    placeholder='Hasło'
+    id='password'
+    name='password'
+    class='forms-input'
+    [(ngModel)]="login_password"
+    >
+    <button (click)='handlerPasswordType()'><img src={{imgSource}}></button>
+    <button (click)='handlerForms()'>Nie masz konta? Zarejestruj się</button>
+  </form>
+</ng-template>
+
+<ng-template #signupForms>
+  <form class="forms" (ngSubmit)="onLoginSubmit()">
+    <h3>Zarejestruj się</h3>
+    <input
+    type="email"
+    placeholder='Adres email'
+    id='email'
+    name='email'
+    class='forms-input'
+    [(ngModel)]="signup_email"
+    >
+    <input
+    [type]="changePasswordType"
+    placeholder='Hasło'
+    id='password'
+    name='password'
+    class='forms-input'
+    [(ngModel)]="signup_password"
+    >
+    <button (click)='handlerPasswordType()'><img src={{imgSource}}></button>
+    <button (click)='handlerForms()'>Masz konto? Zaloguj się</button>
+  </form>
+</ng-template>
