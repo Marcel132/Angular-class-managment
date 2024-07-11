@@ -4,6 +4,7 @@
 fonts
 
 environment
+app.configuration.ts
 
 # Compiled output
 /dist
