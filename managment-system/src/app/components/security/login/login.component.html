@@ -1,52 +1,66 @@
 <div class="wrapper">
-  <div *ngIf="changeForms; then loginForms else signupForms"></div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <ng-container *ngIf="changeForms; then signupForms else loginForms"></ng-container>
+  </div>
+
 </div>
 
 
 <ng-template #loginForms>
-  <form class="forms" (ngSubmit)="onLoginSubmit()">
+  <form  class="forms" [formGroup]="loginForm" (submit)="onLoginSubmit()">
     <h3>Zaloguj się</h3>
     <input
     type="email"
     placeholder='Adres email'
-    id='email'
-    name='email'
+    id='login_email'
+    name='login_email'
     class='forms-input'
-    [(ngModel)]="login_email"
+    formControlName="login_email"
     >
     <input
     [type]="changePasswordType"
     placeholder='Hasło'
-    id='password'
-    name='password'
+    id='login_password'
+    name='login_password'
     class='forms-input'
-    [(ngModel)]="login_password"
+    formControlName="login_password"
     >
-    <button (click)='handlerPasswordType()'><img src={{imgSource}}></button>
+    <div><img [src]=imgSource  (click)='handlerPasswordType()'></div>
+    <input type="submit" value='Zaloguj się' id="submit-button" [disabled]="loginForm.invalid"> <br>
+    <div *ngIf="invalidLogin" class='error'>Nie można się zalogować!</div>
     <button (click)='handlerForms()'>Nie masz konta? Zarejestruj się</button>
   </form>
 </ng-template>
 
+
+
 <ng-template #signupForms>
-  <form class="forms" (ngSubmit)="onLoginSubmit()">
+  <form class="forms" [formGroup]="signupForm" (submit)="onSignupForm()">
     <h3>Zarejestruj się</h3>
     <input
     type="email"
     placeholder='Adres email'
-    id='email'
-    name='email'
+    id='signup_email'
+    name='signup_email'
     class='forms-input'
-    [(ngModel)]="signup_email"
+    formControlName="signup_email"
     >
     <input
     [type]="changePasswordType"
     placeholder='Hasło'
-    id='password'
-    name='password'
+    id='signup_password'
+    name='signup_password'
     class='forms-input'
-    [(ngModel)]="signup_password"
+    formControlName="signup_password"
     >
-    <button (click)='handlerPasswordType()'><img src={{imgSource}}></button>
+    <div><img [src]='imgSource' (click)='handlerPasswordType()' ></div>
+    <input type="submit" value='Zarejestruj się' id="submit-button" [disabled]="signupForm.invalid"> <br>
+    <div *ngIf="invalidSignup" class='error'>Nie można się zarejestrować</div>
     <button (click)='handlerForms()'>Masz konto? Zaloguj się</button>
   </form>
 </ng-template>

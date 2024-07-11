@@ -1,18 +1,17 @@
 <div class="container">
 
-  <div *ngIf="true; then loginForm else mainSite"></div>
-
-  <ng-template #loginForm>
-    <app-login></app-login>
-  </ng-template>
-
-  <ng-template #mainSite>
-    <div class="main">
-      <app-navigation></app-navigation>
-      <app-main-content></app-main-content>
-      <app-footer></app-footer>
-    </div>
-  </ng-template>
-
+  <div *ngIf="isLogged; then mainSite else loginForm"></div>
 
 </div>
+
+<ng-template #mainSite>
+  <div class="main">
+    <app-navigation></app-navigation>
+    <app-main-content></app-main-content>
+    <app-footer></app-footer>
+  </div>
+</ng-template>
+
+<ng-template #loginForm>
+  <app-login></app-login>
+</ng-template>
