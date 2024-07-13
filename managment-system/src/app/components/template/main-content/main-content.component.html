@@ -1,31 +1,12 @@
 <div class="wrapper">
+
   <main>
-    <div *ngIf='isUser then user'></div>
-    <div *ngIf='isMod; then moderator'></div>
-    <div *ngIf='isAdmin; then administrator'></div>
+
+    <div *ngIf="isUser || isMod || isAdmin" class='box'>
+      <router-outlet></router-outlet>
+    </div>
+
   </main>
+
 </div>
 
-<ng-template #user>
-  <div *ngIf="handlerClick" class='box'>
-    <div class="box-item">1</div>
-    <div class="box-item">2</div>
-    <div class="box-item">3</div>
-    <div class="box-item">4</div>
-    <div class="box-item">5</div>
-    <div class="box-item">6</div>
-  </div>
-  <div  *ngIf="!handlerClick" class='box'>
-    <router-outlet></router-outlet>
-  </div>
-</ng-template>
-<ng-template #moderator>
-  <div class="box">
-    moderator
-  </div>
-</ng-template>
-<ng-template #administrator>
-  <div class="box">
-    administrator
-  </div>
-</ng-template>

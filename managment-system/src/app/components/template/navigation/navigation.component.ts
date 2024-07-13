@@ -16,9 +16,4 @@ export class NavigationComponent {
   constructor(
     private mainService: MainService,
   ){}
-
-
-  changeContent(){
-
-  }
 }
