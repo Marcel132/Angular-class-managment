@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NavigationComponent } from '../components/template/navigation/navigation.component';
 import { FooterComponent } from '../components/template/footer/footer.component';
 import { MainContentComponent } from '../components/template/main-content/main-content.component';
+import { MainService } from '../services/main.service';
 
 
 
@@ -19,6 +20,10 @@ import { MainContentComponent } from '../components/template/main-content/main-c
     NavigationComponent,
     FooterComponent,
     MainContentComponent,
+  ],
+  providers: [
+    MainService,
   ]
 })
-export class TemplateModule { }
+export class TemplateModule {
+}

@@ -3,7 +3,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth'
 import { AngularFirestore } from '@angular/fire/compat/firestore'
 import { AbstractControl, FormBuilder, FormGroup, Validators  } from '@angular/forms'
 import { SessionService } from './session.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,6 @@ export class LoginService {
     private firestore: AngularFirestore,
     private fb: FormBuilder,
     private sessionService: SessionService,
-    private router: Router,
   ) { }
 
   checkValidEmail(control: AbstractControl){

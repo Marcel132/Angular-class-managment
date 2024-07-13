@@ -49,6 +49,17 @@ body {
   font-family: 'Lato', 'Roboto', 'Times New Roman', Times, serif;
 }
 
+a {
+  text-decoration: none;
+
+  &:active, &:hover, &:visited{
+    color: inherit
+  }
+  &:hover {
+    opacity: .8;
+  }
+}
+
 
 // * Mobile
 @media screen and (max-width: 425px) {

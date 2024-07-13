@@ -1,0 +1,8 @@
+<div class="account">
+  <div *ngIf='isUser then user'></div>
+  <div *ngIf='isMod; then moderator'></div>
+  <div *ngIf='isAdmin; then administrator'></div>
+</div>
+  <ng-template #user> konto użytkownika</ng-template>
+  <ng-template #moderator>konto moda</ng-template>
+  <ng-template #administrator> konto admina</ng-template>
