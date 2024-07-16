@@ -17,7 +17,16 @@
 </div>
 
 <ng-template #administrator>
-  konto admina
+  <nav class="account-nav-bar">
+    <div><a routerLink='/account'>Profil publiczny</a></div>
+    <div><a routerLink='/account/security'>Bezpieczeństwo</a></div>
+    <div><a routerLink='/acccount/settings'>Ustawienia Konta</a></div>
+    <div><a routerLink='/'></a></div>
+    <div><a routerLink='/'></a></div>
+  </nav>
+  <div class="account-content">
+    <router-outlet></router-outlet>
+  </div>
 </ng-template>
 
 <ng-template #moderator >
@@ -27,3 +36,6 @@
 <ng-template #user>
   konto usera
 </ng-template>
+
+
+<ng-template #profilPubliczny></ng-template>

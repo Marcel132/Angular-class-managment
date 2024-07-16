@@ -26,4 +26,12 @@ export class NavigationComponent implements OnInit {
     this.enabledMenu = !this.enabledMenu;
     this.myEvent.emit(this.enabledMenu);
   }
+
+  // This function is for mobile devices that screen in less than 600px, because on this devices navigation bar should close after click on the link
+  showMenuMobile(){
+    if(window.innerWidth < 600){
+      this.enabledMenu = !this.enabledMenu;
+      this.myEvent.emit(this.enabledMenu);
+    }
+  }
 }

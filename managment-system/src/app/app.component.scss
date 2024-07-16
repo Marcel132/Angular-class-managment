@@ -29,6 +29,16 @@
   display: flex;
   flex-direction: row;
 }
+.app-nav{
+  transition: width 0.24s ease;
+  overflow: hidden;
+  text-wrap: nowrap;
+}
+.app-content {
+  transition: width 0.24s ease;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
 .app-footer{
   width: 100%;
   font-size: 12px;
@@ -88,3 +98,5 @@
     }
   }
 }
+
+

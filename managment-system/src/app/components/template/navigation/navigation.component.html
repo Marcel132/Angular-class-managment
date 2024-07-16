@@ -1,22 +1,22 @@
 <nav class="navigation"  [ngClass]="{'active': enabledMenu, 'deactive': !enabledMenu}">
-  <div class="nav-menu-item show-menu" (click)="showMenu()"><img src="../../../../assets/img/list.svg" alt="Menu"></div>
+  <div class="nav-menu-item show-menu"><img src="../../../../assets/img/list.svg" alt="Menu"  (click)="showMenu()"></div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
-    <a routerLink='home' (click)="showMenu()">
+    <a routerLink='home' (click)="showMenuMobile()">
     Strona Główna <p>Wróć na stronę główną</p>
     </a>
   </div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
-    <a routerLink='/resources' (click)="showMenu()">
+    <a routerLink='/resources' (click)="showMenuMobile()">
     Zasoby <p>Przeszukaj zasoby</p>
     </a>
   </div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
-    <a routerLink='/settings' (click)="showMenu()">
+    <a routerLink='/settings' (click)="showMenuMobile()">
     Ustawienia <p>Sprawdż ustawienia</p>
     </a>
   </div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
-    <a routerLink='/account'  (click)="showMenu()">
+    <a routerLink='/account'  (click)="showMenuMobile()">
     Konto <p>Wejdź na konto</p>
     </a>
   </div>

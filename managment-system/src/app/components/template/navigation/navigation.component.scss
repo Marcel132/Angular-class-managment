@@ -1,7 +1,8 @@
 .navigation {
   width: 100%;
-  padding: 1rem;
+  padding: 1rem .5rem;
   font-size: 20px;
+  text-align: center;
 
   .show-menu {
     cursor: pointer;
@@ -9,6 +10,8 @@
 
     img{
       width: 35px;
+      transition: width 0.24s ease;
+      overflow: hidden;
     }
   }
   .nav-menu-item {
@@ -43,6 +46,8 @@
   .deactive {
     .show-menu img {
       width: 20px;
+      transition: width 0.24s ease;
+      overflow: hidden;
     }
   }
   .navigation {
