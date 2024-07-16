@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter  } from '@angular/core';
 import { SharedModuleModule } from '../../../modules/shared-module.module';
-import { MainService } from '../../../services/main.service';
 
 @Component({
   selector: 'app-navigation',
@@ -11,9 +10,20 @@ import { MainService } from '../../../services/main.service';
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss'
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
+
+  @Output() myEvent = new EventEmitter<boolean>();
 
   constructor(
-    private mainService: MainService,
   ){}
+
+  enabledMenu: boolean = true;
+
+  ngOnInit() {
+  }
+
+  showMenu(){
+    this.enabledMenu = !this.enabledMenu;
+    this.myEvent.emit(this.enabledMenu);
+  }
 }

@@ -1,0 +1,29 @@
+<div class="account-container">
+  <span [ngSwitch]="changeTemplate">
+
+    <ng-container *ngSwitchCase="'isAdmin'">
+      <ng-template [ngTemplateOutlet]="administrator"></ng-template>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'isMod'">
+      <ng-template [ngTemplateOutlet]="moderator"></ng-template>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'isUser'">
+      <ng-template [ngTemplateOutlet]="user"></ng-template>
+    </ng-container>
+
+  </span>
+</div>
+
+<ng-template #administrator>
+  konto admina
+</ng-template>
+
+<ng-template #moderator >
+  konto moda
+</ng-template>
+
+<ng-template #user>
+  konto usera
+</ng-template>

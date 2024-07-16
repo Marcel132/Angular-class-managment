@@ -1,43 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+
+// Lato
 @font-face {
   font-family: 'Lato';
   src: url('./assets/fonts/Lato/Lato-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+// Roboto
 @font-face {
   font-family: 'Roboto';
   src: url('./assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+// Montserrat
 @font-face {
   font-family: 'Montserrat';
   src: url('./assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
-$colors: ();
-$font_size: (
-  desktop_tiny: 11px,
-  desktop_small: 15px,
-  desktop_normal: 20px,
-  desktop_big: 25px,
 
-  tablet_small: 14px,
-  tablet_normal: 18px,
-  tablet_big: 22px,
-
-  mobile_small: 13px,
-  mobile_normal: 16px,
-  mobile_big: 19px,
+$colors: (
+  disabled: #ff000094,
+  enabled: #00ff0087,
 );
-$alerts: (
-  success: #d4bc0a,
-  error: #ff0000,
-  warning: #ff570f
-);
-
 
 * {
   padding: 0;
@@ -52,7 +40,7 @@ body {
 a {
   text-decoration: none;
 
-  &:active, &:hover, &:visited{
+  &:active, &:hover, &:visited, &:link{
     color: inherit
   }
   &:hover {
@@ -63,22 +51,22 @@ a {
 
 // * Mobile
 @media screen and (max-width: 425px) {
-  * {
-    font-size: map-get($font_size, mobile_normal);
+  body {
+    font-size: 12px
   }
 }
 
 // * Tablet
 @media screen and (max-width: 768px) {
-  * {
-    font-size: map-get($font_size, tablet_normal);
+  body {
+    font-size: 15px
   }
 }
 
 // * Desktop
 @media screen and (min-width: 768px) {
-  * {
-    font-size: map-get($font_size, desktop_normal);
+  body {
+    font-size: 18px
   }
 }
 

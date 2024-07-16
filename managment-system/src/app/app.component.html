@@ -1,17 +1,29 @@
-<div class="container">
 
-  <div *ngIf="isLogged; then mainSite else loginForm"></div>
-
-</div>
+<div *ngIf="isLogged; then mainSite else loginForm"></div>
 
 <ng-template #mainSite>
-  <div class="main">
-    <app-navigation></app-navigation>
-    <app-main-content></app-main-content>
-    <app-footer></app-footer>
+  <div class="main-container">
+
+    <div class='logo'>ManagementSystem</div>
+    <!-- <div class="empty"></div> -->
+
+    <div class="content" [ngClass]="{'active': enabledMenu, 'deactive': !enabledMenu}">
+
+      <app-navigation class='app-nav'  (myEvent)="receiveData($event)"></app-navigation>
+
+      <app-main-content class='app-content'></app-main-content>
+
+    </div>
+
+    <app-footer class='app-footer'></app-footer>
+
   </div>
 </ng-template>
 
-<ng-template #loginForm>
-  <app-login></app-login>
+<ng-template #loginForm class='login-page'>
+  <div class="login-container">
+
+    <app-login></app-login>
+
+  </div>
 </ng-template>

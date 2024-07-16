@@ -1,20 +1,51 @@
-@import '../../../../styles.scss';
-
 .navigation {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  margin-bottom: 1rem;
-  top: 1rem;
-  z-index: 5;
-}
-.nav-menu-item{
+  width: 100%;
   padding: 1rem;
+  font-size: 20px;
+
+  .show-menu {
+    cursor: pointer;
+    padding: 1rem;
+
+    img{
+      width: 35px;
+    }
+  }
+  .nav-menu-item {
+    padding: .5rem 0;
+
+    p{
+      display: none;
+    }
+  }
 }
 
-@media screen and (max-width: 425px){
-  .nav-menu-item a{
-    font-size: map-get($font_size, mobile_small) !important;
+
+@media screen and (max-width: 600px){
+  .active {
+    .nav-menu-item{
+      font-size: 18px;
+      text-align: center;
+
+      &:first-child{
+        text-align: left;
+      }
+
+      p{
+        font-size: 13px;
+        display: block;
+      }
+    }
+    .app-content{
+      display: none;
+    }
+  }
+  .deactive {
+    .show-menu img {
+      width: 20px;
+    }
+  }
+  .navigation {
+    padding: 0.4rem;
   }
 }

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationComponent } from '../components/template/navigation/navigation.component';
 import { FooterComponent } from '../components/template/footer/footer.component';
-import { MainContentComponent } from '../components/template/main-content/main-content.component';
+import { MainComponent } from '../components/template/main/main.component';
 import { MainService } from '../services/main.service';
 
 
@@ -14,12 +14,12 @@ import { MainService } from '../services/main.service';
     CommonModule,
     NavigationComponent,
     FooterComponent,
-    MainContentComponent,
+    MainComponent,
   ],
   exports: [
     NavigationComponent,
     FooterComponent,
-    MainContentComponent,
+    MainComponent,
   ],
   providers: [
     MainService,

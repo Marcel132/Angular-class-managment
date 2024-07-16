@@ -1,6 +1,24 @@
-<nav class="navigation">
-  <div class="nav-menu-item"><a routerLink='/'>Strona Główna</a></div>
-  <div class="nav-menu-item"><a routerLink='/resources'>Zasoby</a></div>
-  <div class="nav-menu-item"><a routerLink='/settings'>Ustawienia</a></div>
-  <div class="nav-menu-item"><a routerLink='/account'>Konto</a></div>
+<nav class="navigation"  [ngClass]="{'active': enabledMenu, 'deactive': !enabledMenu}">
+  <div class="nav-menu-item show-menu" (click)="showMenu()"><img src="../../../../assets/img/list.svg" alt="Menu"></div>
+  <div class="nav-menu-item" *ngIf="enabledMenu">
+    <a routerLink='home' (click)="showMenu()">
+    Strona Główna <p>Wróć na stronę główną</p>
+    </a>
+  </div>
+  <div class="nav-menu-item" *ngIf="enabledMenu">
+    <a routerLink='/resources' (click)="showMenu()">
+    Zasoby <p>Przeszukaj zasoby</p>
+    </a>
+  </div>
+  <div class="nav-menu-item" *ngIf="enabledMenu">
+    <a routerLink='/settings' (click)="showMenu()">
+    Ustawienia <p>Sprawdż ustawienia</p>
+    </a>
+  </div>
+  <div class="nav-menu-item" *ngIf="enabledMenu">
+    <a routerLink='/account'  (click)="showMenu()">
+    Konto <p>Wejdź na konto</p>
+    </a>
+  </div>
+
 </nav>

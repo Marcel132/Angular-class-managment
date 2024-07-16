@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-settings',
@@ -9,4 +10,9 @@ import { Component } from '@angular/core';
 })
 export class SettingsComponent {
 
+  constructor(
+    private titleServuce: Title,
+  ){
+    this.titleServuce.setTitle('Ustawienia')
+  }
 }

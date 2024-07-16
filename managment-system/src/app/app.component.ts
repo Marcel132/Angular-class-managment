@@ -19,10 +19,13 @@ export class AppComponent {
   constructor(
     private loginService: LoginService
   ){}
-  title = 'managment-system';
 
   isLogged: boolean = this.loginService.checkLocalStorage()
 
+  enabledMenu: boolean = true
 
+  receiveData(data: boolean){
+    this.enabledMenu = data
+  }
 
 }

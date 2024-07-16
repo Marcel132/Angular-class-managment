@@ -16,15 +16,24 @@
     background-color: inherit;
     border: none;
     cursor: pointer;
-    font-size: map-get($font_size, desktop_tiny);
+    font-size: 13px;
   }
   input[type='submit']{
-    background-color: #00ff00;
-    border: 1px solid #00ff00;
     cursor: pointer;
     margin: 1rem;
     padding: .2rem;
-    font-size: map-get($font_size, desktop_small);
+    font-size: 15px;
+
+    &:disabled{
+      background-color: map-get($colors, disabled);
+      border: 1px solid map-get($colors, disabled);
+      color: black;
+    }
+    &:enabled{
+      background-color: map-get($colors, enabled);
+      border: 1px solid map-get($colors, enabled);
+      color: white;
+    }
   }
   div{
     display: inline;
@@ -44,7 +53,7 @@
   border: none;
   outline: none;
   overflow: hidden;
-  font-size: map-get($font_size, desktop_small);
+  font-size: 15px;
 }
 #login_email {
   margin-top: 1.5rem;
@@ -75,7 +84,7 @@
   0% {
     transform: rotate(0deg);
   }
-  
+
   100% {
     transform: rotate(360deg);
   }
