@@ -1,41 +1,104 @@
 <div class="account-container">
-  <span [ngSwitch]="changeTemplate">
 
-    <ng-container *ngSwitchCase="'isAdmin'">
-      <ng-template [ngTemplateOutlet]="administrator"></ng-template>
-    </ng-container>
+  <div class="account-section">
+    <h4>Profil Publiczny</h4>
+    <span>Nazwa użytkownika: {{username}}</span>
+  </div>
+  <div class="account-section">
+    <h4>Informacje prywatne</h4>
+    <button (click)="toogleEditMode()" [ngClass]="{'showOn': showEditMode,'showOff': !showEditMode }">Edytuj</button>
+      <div class="account-info">
+        <span class='account-key'>Email:</span> <span class='account-value'>{{email}}</span>
+      </div>
+      <div class="account-info">
+        <span class='account-key'>Nazwa użytkownika:</span> <span class='account-value'>{{username}}</span>
+      </div>
+      <div class="account-info">
+        <span class='account-key'>Kraj: </span> <span class='account-value'>{{country}}</span>
+      </div>
+      <div class="account-info">
+        <span class='account-key'>Numer telefonu: </span> <span class='account-value'>{{phoneNumber}}</span>
+      </div>
 
-    <ng-container *ngSwitchCase="'isMod'">
-      <ng-template [ngTemplateOutlet]="moderator"></ng-template>
-    </ng-container>
+      <form *ngIf='showEditMode' class='account-form'>
+        <h5>Wpisz nowe dane</h5>
+        <div class="form-data">
+          <input
+          type="text"
+          class='account-form-value'
+          [(ngModel)]="editUsername"
+          placeholder="Nowa nazwa użytkownika*"
+          name='editUsername'
+          >
+        </div>
+        <div class="form-data">
+          <input
+          type="text"
+          class='account-form-value'
+          [(ngModel)]="editCountry"
+          placeholder="Nowy kraj*"
+          name='editCountry'
+          >
+        </div>
+        <div class="form-data">
+          <input
+          type="text"
+          class='account-form-value'
+          [(ngModel)]="editPhoneNumber"
+          placeholder="Nowy numer telefonu*"
+          name='editPhoneNumber'
+          >
+        </div>
+        <button type="button" (click)="getUserInfo()">Zapisz</button>
+        <p>* - jeśli nie chcesz aktualizować danych, nie uzupełniaj ich</p>
+      </form>
+  </div>
+  <div class="account-section">
+    <div class="account-security">
+      <h4>Bezpieczeństwo</h4>
+      <h5>Zmiana hasła</h5>
+      <div class="account-security-box">
+        <input
+        [type]="passwordTypeOldPassword"
+        name="old-password"
+        id="old-password"
+        [(ngModel)]="oldPassword"
+        placeholder='Stare hasło'
+        >
+        <img [src]="imgSrcOldPassword" alt="show password" (click)="changePasswordType('old')">
+      </div>
+      <div class="account-security-box">
+        <input
+      [type]="passwordTypeNewPassword"
+      name="new-password"
+      id="new-password"
+      [(ngModel)]='newPassword'
+      placeholder='Nowe hasło'
+      >
+      <img [src]="imgSrcNewPassword" alt="show password" (click)="changePasswordType('new')">
+      </div>
 
-    <ng-container *ngSwitchCase="'isUser'">
-      <ng-template [ngTemplateOutlet]="user"></ng-template>
-    </ng-container>
+      <input type="submit" value="Zmień" (click)="checkPasswords()">
 
-  </span>
+      <div *ngIf='invalidOldPasswords'> Błąd, niepoprawne hasło </div>
+    </div>
+  </div>
+  <div class="account-section">
+    <div class="account-delete">
+      <h4>Usuń konto</h4>
+      <p>Uwaga! Ta operacja jest nieodwracalna</p>
+      <button (click)="deleteAccount('check')" class='delete'>Usuń konto</button>
+
+      <div *ngIf='showBox'>
+        <div class="check-delete-account">
+          <p>Jesteś pewien?</p>
+          <button (click)="deleteAccount('cancel')" class='no-delete'>Nie</button>
+          <button (click)="deleteAccount('delete')" class='delete'>Tak</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </div>
 
-<ng-template #administrator>
-  <nav class="account-nav-bar">
-    <div><a routerLink='/account'>Profil publiczny</a></div>
-    <div><a routerLink='/account/security'>Bezpieczeństwo</a></div>
-    <div><a routerLink='/acccount/settings'>Ustawienia Konta</a></div>
-    <div><a routerLink='/'></a></div>
-    <div><a routerLink='/'></a></div>
-  </nav>
-  <div class="account-content">
-    <router-outlet></router-outlet>
-  </div>
-</ng-template>
-
-<ng-template #moderator >
-  konto moda
-</ng-template>
-
-<ng-template #user>
-  konto usera
-</ng-template>
-
-
-<ng-template #profilPubliczny></ng-template>

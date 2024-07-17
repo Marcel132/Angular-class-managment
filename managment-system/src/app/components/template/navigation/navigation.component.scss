@@ -1,8 +1,11 @@
 .navigation {
   width: 100%;
-  padding: 1rem .5rem;
+  height: 100%;
+  padding: 1rem .2rem;
+  text-wrap: wrap;
   font-size: 20px;
-  text-align: center;
+  color: #fefefe;
+  background: transparent linear-gradient(159deg, #3d485d, #252d3a 81%) 0 0 no-repeat padding-box;
 
   .show-menu {
     cursor: pointer;
@@ -12,10 +15,38 @@
       width: 35px;
       transition: width 0.24s ease;
       overflow: hidden;
+      filter: invert(1);
     }
   }
   .nav-menu-item {
     padding: .5rem 0;
+    text-align: left;
+    margin-left: 2rem;
+
+    .nav-menu-item-img{
+      position: relative;
+      top: 4px;
+      width: 28px;
+      margin-right: 1rem;
+      transition: width 0.24s ease;
+      overflow: hidden;
+      filter: invert(1);
+    }
+
+
+    button {
+      cursor: pointer;
+      color: #fff;
+      text-align: left;
+      margin-top: 1rem;
+      padding: 1rem;
+      font-size: 20px;
+      background-color: initial;
+      border: none;
+      &:hover {
+        filter: invert(1);
+      }
+    }
 
     p{
       display: none;
@@ -23,12 +54,26 @@
   }
 }
 
+.deactive {
+  .nav-menu-item:first-child{
+    transition: width 0.24s ease;
+    margin: 0;
+    padding-left: 0.4rem;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .nav-menu-item-img{
+    display: none;
+  }
+}
 
 @media screen and (max-width: 600px){
   .active {
     .nav-menu-item{
       font-size: 18px;
-      text-align: center;
+      align-content: center;
+      text-align: justify !important;
 
       &:first-child{
         text-align: left;
@@ -38,6 +83,9 @@
         font-size: 13px;
         display: block;
       }
+    }
+    .nav-menu-item-img{
+      display: inline-block;;
     }
     .app-content{
       display: none;
@@ -49,8 +97,5 @@
       transition: width 0.24s ease;
       overflow: hidden;
     }
-  }
-  .navigation {
-    padding: 0.4rem;
   }
 }

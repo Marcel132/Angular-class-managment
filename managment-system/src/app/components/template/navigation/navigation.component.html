@@ -2,23 +2,32 @@
   <div class="nav-menu-item show-menu"><img src="../../../../assets/img/list.svg" alt="Menu"  (click)="showMenu()"></div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
     <a routerLink='home' (click)="showMenuMobile()">
-    Strona Główna <p>Wróć na stronę główną</p>
+      <img src="../../../../assets/img/house.svg" alt="Go to main page" class='nav-menu-item-img'>
+      Strona Główna <p>Wróć na stronę główną</p>
     </a>
   </div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
     <a routerLink='/resources' (click)="showMenuMobile()">
-    Zasoby <p>Przeszukaj zasoby</p>
+      <img src="../../../../assets/img/gear.svg" alt="Go to settings" class='nav-menu-item-img'>
+      Zasoby <p>Przeszukaj zasoby</p>
     </a>
   </div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
     <a routerLink='/settings' (click)="showMenuMobile()">
-    Ustawienia <p>Sprawdż ustawienia</p>
+      <img src="../../../../assets/img/gear.svg" alt="Go to settings" class='nav-menu-item-img'>
+      Ustawienia <p>Sprawdż ustawienia</p>
     </a>
   </div>
   <div class="nav-menu-item" *ngIf="enabledMenu">
     <a routerLink='/account'  (click)="showMenuMobile()">
-    Konto <p>Wejdź na konto</p>
+      <img src="../../../../assets/img/person.svg" alt="Go to account" class='nav-menu-item-img'>
+      Konto <p>Wejdź na konto</p>
     </a>
   </div>
-
+  <div class="nav-menu-item" *ngIf="enabledMenu">
+    <img src="../../../../assets/img/box-arrow-left.svg" alt="Log out"class='nav-menu-item-img'>
+    <button (click)="logout()">
+      Wyloguj się
+    </button>
+  </div>
 </nav>

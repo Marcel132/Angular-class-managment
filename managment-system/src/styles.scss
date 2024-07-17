@@ -25,6 +25,8 @@
 $colors: (
   disabled: #ff000094,
   enabled: #00ff0087,
+  delete: #ff0000,
+  noDelete: #505050,
 );
 
 * {
@@ -46,6 +48,10 @@ a {
   &:hover {
     opacity: .8;
   }
+}
+
+input {
+  overflow: hidden;
 }
 
 

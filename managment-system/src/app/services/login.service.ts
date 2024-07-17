@@ -92,6 +92,7 @@ export class LoginService {
           this.sessionService.set('manageSystemSession', userCredentials.user)
           this.sessionService.set('isLoggedIn', true)
           this.saveUserData(email, userCredentials.user.uid, password)
+          this.firestore.collection('user_data').doc(email).set({email: email})
           return true
         } else {
           console.log("Cannot create credentials")

@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter  } from '@angular/core';
 import { SharedModuleModule } from '../../../modules/shared-module.module';
+import { MainService } from '../../../services/main.service';
 
 @Component({
   selector: 'app-navigation',
@@ -15,6 +16,7 @@ export class NavigationComponent implements OnInit {
   @Output() myEvent = new EventEmitter<boolean>();
 
   constructor(
+    private mainService: MainService
   ){}
 
   enabledMenu: boolean = true;
@@ -33,5 +35,11 @@ export class NavigationComponent implements OnInit {
       this.enabledMenu = !this.enabledMenu;
       this.myEvent.emit(this.enabledMenu);
     }
+
+  }
+
+  // Logout from app
+  logout(){
+    this.mainService.getLogout()
   }
 }

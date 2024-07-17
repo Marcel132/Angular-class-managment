@@ -21,7 +21,7 @@
   height: 6vh;
   text-align: right;
   padding: 0.5rem 1rem;
-  background-color: #f0f0f0
+  border-bottom: 2px solid #e9e9f2
 }
 .content{
   width: 100%;
@@ -37,7 +37,7 @@
 .app-content {
   transition: width 0.24s ease;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: #edeffb;
 }
 .app-footer{
   width: 100%;
@@ -54,7 +54,7 @@
 }
 .deactive {
   .app-nav{
-    width: 80px;
+    width: 62px;
   }
   .app-content{
     width: 100%;
@@ -63,13 +63,13 @@
 
 
 
-@media screen and (max-width: 800px){
+@media screen and (max-width: 900px){
   .active {
     .app-nav{
-      width: 30%;
+      width: 25%;
     }
     .app-content{
-      width: 70%;
+      width: 75%;
     }
   }
 }

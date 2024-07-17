@@ -37,7 +37,6 @@ export class LoginComponent {
   invalidSignup: boolean = false;
 
   handlerPasswordType() {
-
     this.changePasswordType = this.changePasswordType === "password" ? "text" : "password";
     this.imgSource = this.imgSource === "../../../../assets/img/eye.svg" ? "../../../../assets/img/eye-slash.svg" : "../../../../assets/img/eye.svg"
   }
