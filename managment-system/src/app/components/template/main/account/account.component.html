@@ -1,12 +1,13 @@
-<div class="account-container">
+<ng-container *ngIf="isDataLoaded">
+  <div class="account-container">
 
-  <div class="account-section">
-    <h4>Profil Publiczny</h4>
-    <span>Nazwa użytkownika: {{username}}</span>
-  </div>
-  <div class="account-section">
-    <h4>Informacje prywatne</h4>
-    <button (click)="toogleEditMode()" [ngClass]="{'showOn': showEditMode,'showOff': !showEditMode }">Edytuj</button>
+    <div class="account-section">
+      <h4>Profil Publiczny</h4>
+      <span>Nazwa użytkownika: {{username}}</span>
+    </div>
+    <div class="account-section">
+      <h4>Informacje prywatne</h4>
+      <button (click)="toogleEditMode()" [ngClass]="{'showOn': showEditMode,'showOff': !showEditMode }">Edytuj</button>
       <div class="account-info">
         <span class='account-key'>Email:</span> <span class='account-value'>{{email}}</span>
       </div>
@@ -20,85 +21,91 @@
         <span class='account-key'>Numer telefonu: </span> <span class='account-value'>{{phoneNumber}}</span>
       </div>
 
-      <form *ngIf='showEditMode' class='account-form'>
-        <h5>Wpisz nowe dane</h5>
-        <div class="form-data">
+      <div class="account-change-data-wrapper"  *ngIf='showEditMode' (click)="toogleEditMode()">
+        <form class='account-form' (click)="stopPropagation($event)">
+          <h5>Wpisz nowe dane</h5>
+          <div class="form-data">
+            <input
+            type="text"
+            class='account-form-value'
+            [(ngModel)]="editUsername"
+            placeholder="Nowa nazwa użytkownika*"
+            name='editUsername'
+            >
+          </div>
+          <div class="form-data">
+            <input
+            type="text"
+            class='account-form-value'
+            [(ngModel)]="editCountry"
+            placeholder="Nowy kraj*"
+            name='editCountry'
+            >
+          </div>
+          <div class="form-data">
+            <input
+            type="text"
+            class='account-form-value'
+            [(ngModel)]="editPhoneNumber"
+            placeholder="Nowy numer telefonu*"
+            name='editPhoneNumber'
+            >
+          </div>
+          <button type="button" (click)="getUserInfo()">Zapisz</button>
+          <p>* - jeśli nie chcesz aktualizować danych, nie uzupełniaj ich</p>
+        </form>
+      </div>
+    </div>
+    <div class="account-section">
+      <form class="account-security">
+        <h4>Bezpieczeństwo</h4>
+        <h5>Zmiana hasła</h5>
+        <div class="account-security-box">
           <input
-          type="text"
-          class='account-form-value'
-          [(ngModel)]="editUsername"
-          placeholder="Nowa nazwa użytkownika*"
-          name='editUsername'
+          [type]="oldPasswordInputType"
+          name="old-password"
+          id="old-password"
+          [(ngModel)]="oldPassword"
+          placeholder='Stare hasło'
           >
+          <img [src]="imgSrcOldPassword" alt="show password" (click)="changePasswordType('old')">
         </div>
-        <div class="form-data">
+        <div class="account-security-box">
           <input
-          type="text"
-          class='account-form-value'
-          [(ngModel)]="editCountry"
-          placeholder="Nowy kraj*"
-          name='editCountry'
-          >
-        </div>
-        <div class="form-data">
-          <input
-          type="text"
-          class='account-form-value'
-          [(ngModel)]="editPhoneNumber"
-          placeholder="Nowy numer telefonu*"
-          name='editPhoneNumber'
-          >
-        </div>
-        <button type="button" (click)="getUserInfo()">Zapisz</button>
-        <p>* - jeśli nie chcesz aktualizować danych, nie uzupełniaj ich</p>
-      </form>
-  </div>
-  <div class="account-section">
-    <div class="account-security">
-      <h4>Bezpieczeństwo</h4>
-      <h5>Zmiana hasła</h5>
-      <div class="account-security-box">
-        <input
-        [type]="passwordTypeOldPassword"
-        name="old-password"
-        id="old-password"
-        [(ngModel)]="oldPassword"
-        placeholder='Stare hasło'
+        [type]="newPasswordInputType"
+        name="new-password"
+        id="new-password"
+        [(ngModel)]='newPassword'
+        placeholder='Nowe hasło'
         >
-        <img [src]="imgSrcOldPassword" alt="show password" (click)="changePasswordType('old')">
-      </div>
-      <div class="account-security-box">
-        <input
-      [type]="passwordTypeNewPassword"
-      name="new-password"
-      id="new-password"
-      [(ngModel)]='newPassword'
-      placeholder='Nowe hasło'
-      >
-      <img [src]="imgSrcNewPassword" alt="show password" (click)="changePasswordType('new')">
-      </div>
+        <img [src]="imgSrcNewPassword" alt="show password" (click)="changePasswordType('new')">
+        </div>
 
-      <input type="submit" value="Zmień" (click)="checkPasswords()">
+        <input type="submit" value="Zmień" (click)="checkPasswords()">
 
-      <div *ngIf='invalidOldPasswords'> Błąd, niepoprawne hasło </div>
+        <div *ngIf='invalidOldPassword'> Błędne stare hasło! Jeśli wprowadzane hasło jest poprawne, należy zalogować się ponownie</div>
+        <div *ngIf='invalidNewPassword'> Błędne noew hasło!</div>
+        <div *ngIf='noMinLetters'> Hasło musi mieć min. 8 znaków!</div>
+      </form>
     </div>
-  </div>
-  <div class="account-section">
-    <div class="account-delete">
-      <h4>Usuń konto</h4>
-      <p>Uwaga! Ta operacja jest nieodwracalna</p>
-      <button (click)="deleteAccount('check')" class='delete'>Usuń konto</button>
+    <div class="account-section">
+      <div class="account-delete">
+        <h4>Usuń konto</h4>
+        <p>Uwaga! Ta operacja jest nieodwracalna</p>
+        <button (click)="deleteAccount('check')" class='delete'>Usuń konto</button>
 
-      <div *ngIf='showBox'>
-        <div class="check-delete-account">
-          <p>Jesteś pewien?</p>
-          <button (click)="deleteAccount('cancel')" class='no-delete'>Nie</button>
-          <button (click)="deleteAccount('delete')" class='delete'>Tak</button>
+        <div *ngIf='showBox'>
+          <div class="check-delete-account">
+            <p>Jesteś pewien?</p>
+            <button (click)="deleteAccount('cancel')" class='no-delete'>Nie</button>
+            <button (click)="deleteAccount('delete')" class='delete'>Tak</button>
+          </div>
         </div>
       </div>
     </div>
+
+
   </div>
 
 
-</div>
-
+</ng-container>

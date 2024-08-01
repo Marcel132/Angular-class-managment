@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { SessionService } from './session.service';
 import { firstValueFrom } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { LoginService } from './login.service';
 
 
 @Injectable({
@@ -17,32 +18,32 @@ export class MainService {
   constructor(
     private firestore: AngularFirestore,
     private sessionService: SessionService,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private loginService: LoginService
 ) { }
 
-  private async checkStatus(): Promise<boolean>{    try {
-      let userStorage = this.sessionService.get('manageSystemSession')
-      if(userStorage){
-        const dataRef = this.firestore.collection('status').doc(userStorage.email)
-        const data = await firstValueFrom(dataRef.get())
+  private getUid() {
+
+  }
+
+  private async checkStatus(): Promise<boolean>{
+    try {
+      const uid = this.sessionService.get('uid')
+      if(uid){
+        const firebaseData = this.firestore.collection('status').doc(uid)
+        const data = await firstValueFrom(firebaseData.get())
 
         if(data.exists){
-          const isAdmin = data.get('isAdmin')
-          const isMod = data.get('isMod')
-
-          this.admin = isAdmin === true
-          this.mod = isMod === true
-          this.user = !isAdmin && !isMod
-
+          this.user = data.get('isUser')
+          this.mod = data.get('isMod')
+          this.admin = data.get('isAdmin')
           return true
-
         } else {
           console.log("Data not found in the database.");
           return false;
         }
       } else {
-        console.error("User session not found.");
-        return false;
+        return false
       }
     }catch(error) {
       console.error("Error checking status:", error);

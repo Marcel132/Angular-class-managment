@@ -54,6 +54,11 @@ input {
   overflow: hidden;
 }
 
+.no-scroll {
+  overflow: hidden;
+  width: 100%;
+}
+
 
 // * Mobile
 @media screen and (max-width: 425px) {
@@ -65,14 +70,14 @@ input {
 // * Tablet
 @media screen and (max-width: 768px) {
   body {
-    font-size: 15px
+    font-size: 14px
   }
 }
 
 // * Desktop
 @media screen and (min-width: 768px) {
   body {
-    font-size: 18px
+    font-size: 15px
   }
 }
 

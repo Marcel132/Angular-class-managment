@@ -1,12 +1,12 @@
 import { Component, OnInit, Output, EventEmitter  } from '@angular/core';
-import { SharedModuleModule } from '../../../modules/shared-module.module';
+import { SharedModule } from '../../../modules/shared.module';
 import { MainService } from '../../../services/main.service';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
   imports: [
-    SharedModuleModule,
+    SharedModule,
   ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss'

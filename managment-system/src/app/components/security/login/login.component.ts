@@ -1,19 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoginService } from '../../../services/login.service';
+import { SharedModule } from '../../../modules/shared.module';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
+    SharedModule
   ],
   providers: [
-    LoginService
+    LoginService,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -60,6 +58,7 @@ export class LoginComponent {
       const success = await this.loginService.getLoginUser(this.loginEmail.value, this.loginPassword.value)
       if(success){
         this.isLoading = true
+        window.document.body.style.cursor = 'wait'
         await this.loginService.checkStatus()
         setTimeout(()=>{
           window.location.reload()

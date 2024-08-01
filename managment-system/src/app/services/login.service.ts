@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth'
 import { AngularFirestore } from '@angular/fire/compat/firestore'
 import { AbstractControl, FormBuilder, FormGroup, Validators  } from '@angular/forms'
 import { SessionService } from './session.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class LoginService {
     private firestore: AngularFirestore,
     private fb: FormBuilder,
     private sessionService: SessionService,
+    private authService: AuthService,
   ) { }
 
   checkValidEmail(control: AbstractControl){
@@ -63,7 +65,6 @@ export class LoginService {
         if(this.loginForm.valid){
           const userCredentials = await this.afAuth.signInWithEmailAndPassword(email, password)
           if(userCredentials.user){
-            this.sessionService.set('manageSystemSession', userCredentials.user);
             this.sessionService.set('isLoggedIn', true);
             return true;
           } else {
@@ -83,16 +84,18 @@ export class LoginService {
   getLoginUser(email: string, password: string){
     return this.loginUser(email, password)
   }
+
   private async signupUser(email: string, password: string): Promise<boolean> {
     this.submitted = true
     try {
       if(this.signupForm.valid){
         const userCredentials = await this.afAuth.createUserWithEmailAndPassword(email, password)
         if(userCredentials.user){
-          this.sessionService.set('manageSystemSession', userCredentials.user)
+          const uid = userCredentials.user.uid
           this.sessionService.set('isLoggedIn', true)
-          this.saveUserData(email, userCredentials.user.uid, password)
-          this.firestore.collection('user_data').doc(email).set({email: email})
+          this.saveUserData(email, uid, password)
+          this.firestore.collection('user_data').doc(uid).set({email: email})
+          this.firestore.collection('status').doc(uid).set({isUser: true, isMod: false, isAdmin: false})
           return true
         } else {
           console.log("Cannot create credentials")
@@ -112,10 +115,9 @@ export class LoginService {
   }
 
   checkLocalStorage(): boolean {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      let localStorageManageSystem: any = this.sessionService.get('manageSystemSession');
+    if (typeof window !== 'undefined') {
       let localStorageLoggedIn: any = this.sessionService.get('isLoggedIn');
-      if (localStorageManageSystem && localStorageLoggedIn) {
+      if (localStorageLoggedIn) {
         return true;
       }
     }
@@ -133,6 +135,7 @@ export class LoginService {
 
     let createdAt = `${year}/${month}/${day} ${hour}:${minutes}:${seconds}`
 
+    // Hashed a password
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -144,7 +147,8 @@ export class LoginService {
       email: email,
       uid: uid,
       password: hashedPassword,
-      createdAt: createdAt
+      createdAt: createdAt,
+      isVerify: false,
     }
 
     try {
@@ -157,11 +161,10 @@ export class LoginService {
   }
 
   async checkStatus(){
-    let storage = await this.sessionService.get('isLoggedIn');
-    let userData = await this.sessionService.get('manageSystemSession')
-    if(storage && userData){
-      let firebaseData = this.firestore.collection('users').doc(userData.uid)
-      console.log(firebaseData)
+    let userToken = await this.sessionService.get('isLoggedIn');
+    const uid =  await this.authService.getUser()
+    if(userToken&& uid){
+      let firebaseData = this.firestore.collection('users').doc(uid)
       if( firebaseData ){
         return true;
       } else {

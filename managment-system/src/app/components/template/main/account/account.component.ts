@@ -1,48 +1,47 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MainComponent } from '../main.component';
-import { SharedModuleModule } from '../../../../modules/shared-module.module';
+import { SharedModule } from '../../../../modules/shared.module';
 import { Title } from '@angular/platform-browser';
 import { AccountService } from '../../../../services/account.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-account',
   standalone: true,
   imports: [
     MainComponent,
-    SharedModuleModule
+    SharedModule
   ],
   providers: [
     AccountService,
+    AuthService
   ],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss'
 })
 export class AccountComponent implements OnInit{
 
-  // changeTemplate: string = 'isUser'
-
-  // isUser: boolean = this.mainComponent.isUser
-  // isMod: boolean = this.mainComponent.isMod
-  // isAdmin: boolean = this.mainComponent.isAdmin;
-
-
-  editUsername: string = '';
-  editCountry: string = '';
-  editPhoneNumber: string = '';
 
   constructor(
-    private mainComponent: MainComponent,
     private accountService: AccountService,
     private titleService: Title,
   ){
     this.titleService.setTitle('Konto');
   }
-  email: string = ''
-  username: string = ''
-  country: string = ''
-  phoneNumber: string = ''
+  isDataLoaded = false
+
+  editUsername = '';
+  editCountry = '';
+  editPhoneNumber = '';
 
   // User Information section
+  email!: string
+  username!: string
+  country!: string
+  phoneNumber!: string
+
+
+
   async ngOnInit() {
     // this.changeTemplate = this.isAdmin === true ? 'isAdmin' : (this.isMod === true ? 'isMod' : 'isUser')
     await this.accountService.getViusalData().then(data => {
@@ -50,8 +49,9 @@ export class AccountComponent implements OnInit{
       this.username = data.username
       this.country = data.country
       this.phoneNumber = data.phoneNumber
-      console.log(this.email, this.username, this.country, this.phoneNumber)
     })
+
+    this.isDataLoaded = true
   }
 
   private async setUserInfo(){
@@ -72,38 +72,56 @@ export class AccountComponent implements OnInit{
 
   showEditMode: boolean = false
 
-  toogleEditMode(){
-    this.showEditMode = !this.showEditMode
+  toogleEditMode() {
+    this.showEditMode = !this.showEditMode;
+    this.toggleScroll(this.showEditMode);
+  }
 
+  toggleScroll(isOpen: boolean) {
+    if (isOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }
+  stopPropagation(event: Event) {
+    event.stopPropagation();
   }
 
   // Security section
-  oldPassword: string = ''
-  invalidOldPasswords: boolean = false
-  newPassword: string = ''
+  oldPassword = ''
+  newPassword = ''
+  invalidOldPassword = false
+  invalidNewPassword = false
+  noMinLetters = false
 
   async checkPasswords(){
-    const oldPassword = await this.accountService.getNewPassword(this.oldPassword)
+    const passwords = await this.accountService.getSetNewPassword(this.oldPassword, this.newPassword);
+    const checkValidNewPassword = await this.accountService.checkValidPassword(this.newPassword);
 
-    if(oldPassword && (this.newPassword.length > 8)){
-      this.accountService.getSetNewPassword(this.newPassword)
+
+    if (passwords && checkValidNewPassword.isValid) {
+      this.oldPassword = ''
+      this.newPassword = ''
     } else {
-      this.invalidOldPasswords = true
+      this.invalidOldPassword = !passwords;
+      this.invalidNewPassword = checkValidNewPassword.errors.invalidNewPassword;
+      this.noMinLetters = checkValidNewPassword.errors.noMinLetters;
     }
   }
 
-  passwordTypeOldPassword: string = 'password'
-  passwordTypeNewPassword: string = 'password'
+  oldPasswordInputType: string = 'password'
+  newPasswordInputType: string = 'password'
 
   imgSrcOldPassword: string = '../../../../../assets/img/eye.svg'
   imgSrcNewPassword: string = '../../../../../assets/img/eye.svg'
 
   changePasswordType(input: string){
     if(input === "old"){
-      this.passwordTypeOldPassword = this.passwordTypeOldPassword === "password" ? "text" : "password";
+      this.oldPasswordInputType = this.oldPasswordInputType === "password" ? "text" : "password";
       this.imgSrcOldPassword = this.imgSrcOldPassword === "../../../../../assets/img/eye.svg" ? "../../../../assets/img/eye-slash.svg" : "../../../../../assets/img/eye.svg"
     } else if(input === "new"){
-      this.passwordTypeNewPassword = this.passwordTypeNewPassword === "password" ? "text" : "password";
+      this.newPasswordInputType = this.newPasswordInputType === "password" ? "text" : "password";
       this.imgSrcNewPassword = this.imgSrcNewPassword === "../../../../../assets/img/eye.svg" ? "../../../../assets/img/eye-slash.svg" : "../../../../../assets/img/eye.svg"
     }
   }

@@ -10,13 +10,16 @@ export class SessionService {
   private sessionData: any = {}
 
   set(key: string, value: any){
-    localStorage.setItem(key, JSON.stringify(value));
+    sessionStorage.setItem(key, JSON.stringify(value));
   }
   get(key: string){
-    const value = localStorage.getItem(key);
+    const value = sessionStorage.getItem(key);
     return value ? JSON.parse(value) : undefined
   }
   clear(storage: string){
-    localStorage.removeItem(storage)
+    sessionStorage.removeItem(storage)
+  }
+  clearSessionStorage(){
+    sessionStorage.clear()
   }
 }

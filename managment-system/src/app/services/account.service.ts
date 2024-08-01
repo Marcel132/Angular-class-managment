@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { SessionService } from './session.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { firstValueFrom } from 'rxjs';
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,25 +13,28 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 export class AccountService {
 
   constructor(
-    private sessionService: SessionService,
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
+    private authService: AuthService,
+    private router: Router,
   ) { }
 
   private async createUserData( username: string, phoneNumber: string, country: string){
-    const user = this.sessionService.get('manageSystemSession')
-    if(user){
-      const userData = this.firestore.collection('user_data').doc(user.email)
+    const uid =  await this.authService.getUser()
+    if(uid){
+      console.log("CreateUserData ",uid)
+      const userData = this.firestore.collection('users').doc(uid)
+      const userEmail = await firstValueFrom(userData.get())
       if(userData){
         const userSchema = {
-          email: user.email,
+          email: userEmail.get('email'),
           username: username,
           phoneNumber: phoneNumber,
           country: country,
         }
 
         try {
-          await this.firestore.collection('user_data').doc(user.email).set(userSchema)
+          await this.firestore.collection('user_data').doc(uid).set(userSchema)
         } catch (error) {
           console.log(error)
         }
@@ -41,7 +46,7 @@ export class AccountService {
     }
   }
 
-  public async getUserData(username: string, phoneNumber: string, country: string){
+  async getUserData(username: string, phoneNumber: string, country: string){
     return this.createUserData(username, phoneNumber, country)
   }
 
@@ -51,32 +56,36 @@ export class AccountService {
   country: string = ''
 
   private async VisualDataForUser(){
-    const user = await this.sessionService.get('manageSystemSession')
-    if(user){
-      const userData = this.firestore.collection('user_data').doc(user.email)
-      if(userData){
-        const data = await firstValueFrom(userData.get())
-        if(data.exists){
-          const username = data.get('username')
-          const phoneNumber = data.get('phoneNumber')
-          const country = data.get('country')
+    const uid =  await this.authService.getUser()
+    if(uid){
+      console.log("Visual Data",uid)
+      const firebaseData = this.firestore.collection('user_data').doc(uid)
+      if(firebaseData){
+        const userData = await firstValueFrom(firebaseData.get())
+        if(userData.exists){
+          const email = userData.get('email')
+          const username = userData.get('username')
+          const phoneNumber = userData.get('phoneNumber')
+          const country = userData.get('country')
 
-          this.email = user.email
+          this.email = email
           this.username = username
           this.phoneNumber = phoneNumber
           this.country = country
-
           return true
-        } else {
-          console.log('Data not found')
+        }
+        else {
+          console.log("User data does not exist")
           return false
         }
-      } else {
-        console.log('Data in database not found')
+      }
+      else {
+        console.log('Firebase data not found')
         return false
       }
-    } else {
-      console.log('Data in session storage not found')
+    }
+    else {
+      this.router.navigate(['/home']);
       return false
     }
   }
@@ -88,107 +97,110 @@ export class AccountService {
 
   // Security section
 
-  checkValidPassword(control: AbstractControl){
-    const invalidWords = ['/',',','\\',')','(','{','}','[',']','!','#','$','%','^','&','*','"',"'",'<','>',':',';','+','=', '@', '?']
-    if(control.value && invalidWords.some(word => control.value.includes(word))){
-      return {invalidPassword: true}
+  async checkValidPassword(password: string){
+    const invalidCharacters = ['/', ',', '\\', ')', '(', '{', '}', '[', ']', '!', '#', '$', '%', '^', '&', '*', '"', "'", '<', '>', ':', ';', '+', '=', '@', '?'];
+    let errors = { invalidNewPassword: false, noMinLetters: false };
+
+    if (password) {
+      if (invalidCharacters.some(char => password.includes(char))) {
+        errors.invalidNewPassword = true;
+      }
+
+      if (password.length < 8) {
+        errors.noMinLetters = true;
+      }
+
+      if((!invalidCharacters.some(char => password.includes(char))) && (password.length >= 8)){
+        errors.invalidNewPassword = false
+        errors.noMinLetters = false
+      }
     }
-    if(control.value && control.value.length < 8){
-      return {invalidPassword: true}
-    }
-    return null
+
+    const isValid = !errors.invalidNewPassword && !errors.noMinLetters;
+    return { isValid, errors };
   }
 
-  private async oldPassword(){
-    const user = await this.sessionService.get('manageSystemSession')
-    if(user){
-      const data = this.firestore.collection('users').doc(user.uid)
+  private async getPasswordFromDatabase(){
+    const uid =  await this.authService.getUser()
+    if(uid){
+      const data = this.firestore.collection('users').doc(uid)
       if(data){
         const firebaseData = await firstValueFrom(data.get())
         if((firebaseData).exists){
-          const oldHashedPassword = firebaseData.get('password')
-          return oldHashedPassword
+          const password = firebaseData.get('password')
+          return password
         } else{
-          console.log('Hashed password not found')
+          console.log('Password not found')
         }
       } else{
-        console.log('User not found')
+        console.log('Data not found')
       }
     } else {
-      console.log('Session not found')
+      console.log('User not found')
     }
   }
 
-  private async checkPasswords(password: string){
-    const oldPassword = await this.oldPassword()
+  private async checkPasswords(oldPassword: string){
+    const databaseHashedPassword = await this.getPasswordFromDatabase()
 
     const encoder = new TextEncoder();
-    const data = encoder.encode(password);
+    const data = encoder.encode(oldPassword);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashedPassword = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 
-    if(oldPassword === hashedPassword){
+    if(databaseHashedPassword == hashedPassword){
       return true
     } else {
       return false
     }
   }
-  getNewPassword(password: string){
-    return this.checkPasswords(password)
-  }
 
-  private async setNewPassword(password: string){
-    const validatePassword = this.checkPasswords(password)
-    const userStorage = await this.sessionService.get('manageSystemSession')
-
-    if (!validatePassword) {
-      throw new Error('Invalid password');
-    }
-    if(!userStorage){
-      console.log("Cannot find a storage")
-    }
-
-    try {
+  private async setNewPassword(oldPassword: string, newPassword: string){
+    const validPasswords = await this.checkPasswords(oldPassword)
+    if(validPasswords){
       const user = await this.afAuth.currentUser
       if(user){
-        //Hash the password
         const encoder = new TextEncoder();
-        const data = encoder.encode(password);
+        const data = encoder.encode(newPassword);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
         const hashedPassword = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 
-        await user.updatePassword(password)
-        await this.firestore.collection('users').doc(userStorage.uid).update({
-          password: hashedPassword
-        })
+        try {
+          await user.updatePassword(hashedPassword)
+          await this.firestore.collection('users').doc(user.uid).update({
+            password: hashedPassword
+          })
+          console.log("Updated password")
+          return true
 
-        console.log("Updated password")
+        } catch (err) {
+          console.log("You must relogin your account \n", err)
+          return false
+        }
 
-        setTimeout(() => {
-          window.location.reload()
-        }, 1500)
+      } else {
+        return false
       }
-    } catch (err){
-      console.log(err)
+    } else {
+      return false
     }
 
   }
-  getSetNewPassword(password: string){
-    return this.setNewPassword(password)
+
+  getSetNewPassword(oldPassword: string, newPassword: string){
+    return this.setNewPassword(oldPassword, newPassword)
   }
   // For deleting account
-  private async deleteAccount(uid: string, email: string, sessionStorage: string, userStorage: string){
+  private async deleteAccount(uid: string){
     try{
       const user = await this.afAuth.currentUser
       if(user){
+        console.log("Delete Account",user)
         await user.delete()
         await this.firestore.collection('users').doc(uid).delete()
-        console.log("Deleted users")
-        await this.firestore.collection('user_data').doc(email).delete()
-        console.log("Deleted user_data")
-        this.sessionService.clear(sessionStorage)
-        this.sessionService.clear(userStorage)
-        console.log("Deleted account")
+        await this.firestore.collection('user_data').doc(uid).delete()
+        await this.firestore.collection('status').doc(uid).delete()
+        sessionStorage.removeItem('isLoggedIn')
         setTimeout(() => {
           window.location.reload()
         }, 2000);
@@ -200,12 +212,10 @@ export class AccountService {
     }
   }
 
-  getDeleteData(){
-    const userStorage = this.sessionService.get('manageSystemSession')
-    if(userStorage){
-      const email = userStorage.email
-      const uid = userStorage.uid
-      this.deleteAccount(uid, email, 'isLoggedIn', 'manageSystemSession')
+  async getDeleteData(){
+    const uid = await this.authService.getUser()
+    if(uid){
+      this.deleteAccount(uid)
     }
   }
 }
